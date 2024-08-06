@@ -9,6 +9,7 @@ poetry.lock
 *.doc 
 *.pdf 
 *.txt 
+*.so 
 
 SCRAT*/
 scra*.py
