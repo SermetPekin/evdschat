@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "evdschat"
+version = "0.1.0"
+description = "evdschat"
+authors = ["sermet.pekin <Sermet.Pekin@gmail.com>"]
+license = "CC BY-NC 4.0" 
+readme = "README.md"
+repository = "https://github.com/SermetPekin/evdschat"  # Add this line
+
+[tool.poetry.dependencies]
+python = "^3.10"
+evdspy = ">=1.1.40"
+rich = "^13.7.1"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.2"
+ruff = "^0.5.6"
+tox = "^4.16.0"
+
+[tool.poetry.scripts]
+evdschat = "evdschat:chat_console"
+
+[build-system]
+requires = ["poetry-core>=1.0.0", "setuptools>=42.0.0"]
+build-backend = "setuptools.build_meta"
