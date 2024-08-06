@@ -30,8 +30,8 @@ jobs:
         
         python -m pip install flake8 pytest evdspy
         python -m pip install poetry 
-        poetry install 
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        poetry install .
+        # if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
