@@ -3,7 +3,7 @@ __pycache__/
 .idea*/
 .env
 
-
+poetry.lock
 *.xlsx
 *.docx 
 *.doc 
