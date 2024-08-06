@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "evdschat"
-version = "0.1.0"
+version = "0.1.1"
 description = "evdschat"
 authors = ["sermet.pekin <Sermet.Pekin@gmail.com>"]
 license = "CC BY-NC 4.0" 
@@ -12,6 +12,7 @@ python = "^3.10"
 evdspy = ">=1.1.40"
 rich = "^13.7.1"
 requests = "^2.32.3"
+python-dotenv = "^1.0.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.2"

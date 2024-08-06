@@ -28,7 +28,6 @@ import os
 from pathlib import Path
 
 
-
 def get_myapi_url():
     from dotenv import load_dotenv
 
@@ -50,7 +49,7 @@ class ModelAbstract(ABC):
     test = False
 
     def parse(self, prompt):
-        assert len(str(self.api_key)) > 15
+        # assert len(str(self.api_key)) > 15
         return {"prompt": prompt, "model": self.model, "openai_api_key": self.api_key}
 
     def defaultOptions(self):
@@ -63,18 +62,29 @@ class ModelAbstract(ABC):
         response = self.request_fnc(self.defaultOptions(), json=self.parse(prompt))
         return self.post_helper(response)
 
+    def obscure(self, string: str):
+        nstr = []
+        for i, char in enumerate(string):
+            if i % 3 == 1:
+                nstr.append(char)
+            else:
+                nstr.append("*")
+
+        return "".join(nstr)
+
     def __str__(self):
+        api_key = self.obscure(self.api_key)
+
         return f"""
 
 prompt : {self.parse('<prompt|>')}
 fnc : {self.request_fnc}
-key : {self.api_key}
+key : {api_key}
 api url : {get_myapi_url() }
 """
 
     def mock_req(self, prompt):
-        return global_mock() 
-        
+        return global_mock()
 
     def eval(self, kw: dict, permitted=None) -> Union[Tuple[Any, str], None]:
         # print(kw.keys())

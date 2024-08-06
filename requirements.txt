@@ -5,7 +5,7 @@ charset-normalizer==3.3.2
 colorama==0.4.6
 distlib==0.3.8
 et-xmlfile==1.1.0
--e git+https://github.com/SermetPekin/evdschat.git@cda6dda8ae7e1a1132fb23a11cd18c01af9ba56c#egg=evdschat
+-e git+https://github.com/SermetPekin/evdschat.git@b69b17c11b2cee5fe3453bb7451a7ee365835ced#egg=evdschat
 evdspy==1.1.40
 filelock==3.15.4
 idna==3.7

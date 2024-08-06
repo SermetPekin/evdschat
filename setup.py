@@ -35,7 +35,7 @@ setup(
         ),
     ],
     install_requires=[
-        'evdspy'
+        'evdspy' 
     ],
     entry_points={
         'console_scripts': [

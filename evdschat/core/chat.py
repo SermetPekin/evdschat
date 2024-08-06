@@ -21,8 +21,15 @@ Result = TypeVar("Result")
 Notes = TypeVar("Notes")
 
 
+class GotNoneFromGetter(BaseException): ...
+
+
 def chat(
-    prompt: str, getter: ModelAbstract = OpenAI(), debug=False, test=False
+    prompt: str,
+    getter: ModelAbstract = OpenAI(),
+    debug=False,
+    test=False,
+    force=False,
 ) -> Union[Tuple[Result, Notes], None]:
     """
     Function to process the chat prompt and return the result.
@@ -34,15 +41,24 @@ def chat(
     :return: DataFrame or Result Instance with .data (DataFrame), .metadata (DataFrame), and .to_excel (Callable).
     """
 
-    if PytestTesting().is_testing():
+    if not force and PytestTesting().is_testing():
         test = True
 
     getter.debug = debug
     getter.test = test
     res = getter(prompt)
+    if isinstance(res, type(None)):
+        raise GotNoneFromGetter()
     if isinstance(res, str):
         return res
     if isinstance(res, bool):
+        raise ValueError(
+            """
+    Could not connect the evdschat API. 
+    Please try again later or check documentation for
+    new API URLs"""
+        )
+    if not isinstance(res, tuple) or len(res) != 2:
         raise ValueError(
             """
     Could not connect the evdschat API. 

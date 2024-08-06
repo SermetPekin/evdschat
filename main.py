@@ -22,6 +22,7 @@ prompt = """
  
 """
 
-res , notes  = chat(prompt, debug=False   )
-print(res)
+# res , notes  = chat(prompt, debug=True    )
+res   = chat(prompt, debug=False     )
+print(res , type(res))
 # res.to_excel('prompt1.xlsx')

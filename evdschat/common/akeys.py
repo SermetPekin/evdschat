@@ -20,19 +20,33 @@ from pathlib import Path
 from typing import Union
 
 
-class ErrorApiKey(BaseException): ...
 
 
-@dataclass
+
+class ErrorApiKey(Exception):
+    """Exception raised for errors related to API key issues.
+
+    Attributes:
+        message (str): Explanation of the error.
+    """
+
+    def __init__(self, message="There is an issue with the provided API key."):
+        self.message = message
+        super().__init__(self.message)
+
 class ApiKey(ABC):
-    key: str
+    def __init__(self , key : str ) -> None:
+        self.key = key 
+        self.check()
 
     def __postinit__(self):
         self.check()
 
     def check(self):
-        if str(self.key).__len__ < 5:
-            raise ErrorApiKey(f"{self.key} is not a valid key")
+        if isinstance(self.key , type(None)) : 
+            raise ErrorApiKey('Api key not set. Please see the documentation.')
+        if not isinstance(self.key , str ) or  len(str(self.key))< 5:
+            raise ErrorApiKey(f"Api key {self.key} is not a valid key")
         return True
 
     def get_key(self):
@@ -42,23 +56,23 @@ class ApiKey(ABC):
         self.key = key
 
 
-@dataclass
+
 class OpenaiApiKey(ApiKey):
-    ...
+    def __init__(self , key : str ) -> None:
+        self.key = key 
+        self.check()
 
     def check(self)-> Union[bool , None ] :
-        super().__init__(self)
+        #super().__init__(self)
 
-        if not str(self.key).startswith("sk-") and str(self.key).__len__ < 8:
+        if not str(self.key).startswith("sk-") and len(str(self.key)) < 6:
             raise ErrorApiKey(f"{self.key} is not a valid key")
         return True
 
 
-@dataclass
 class EvdsApiKey(ApiKey): ...
 
 
-@dataclass
 class MistralApiKey(ApiKey): ...
 
 
@@ -67,8 +81,8 @@ def load_api_keys() -> Union[dict[str, str], None]:
 
     env_file = Path(".env")
     load_dotenv(env_file)
-    openai_api_key = OpenaiApiKey(os.getenv("OPENAI_API_KEY"))
-    evds_api_key = EvdsApiKey(os.getenv("EVDS_API_KEY"))
+    openai_api_key = OpenaiApiKey( os.getenv("OPENAI_API_KEY"  ))
+    evds_api_key = EvdsApiKey(  os.getenv("EVDS_API_KEY"  )   )
     return {
         "OPENAI_API_KEY": openai_api_key,
         "EVDS_API_KEY": evds_api_key,

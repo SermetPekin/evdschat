@@ -14,19 +14,18 @@
 
 
 from evdschat import chat
-import pandas as pd  
-
+import pandas as pd
 
 
 def test_chat(capsys):
 
-    prompt = '''
+    prompt = """
 
     Can I get reserves data please ? Aylık frekans istiyorum. ortalama olarak toplulaştırır mısın? 
     
     
-    '''
+    """
     with capsys.disabled():
-        res, notes  = chat(prompt, debug=False)
+        res, notes = chat(prompt, debug=False, force=True)
         print(res)
-        assert isinstance(res.data , pd.DataFrame  )
+        assert isinstance(res.data, pd.DataFrame)
