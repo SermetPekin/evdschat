@@ -26,6 +26,6 @@ def test_chat(capsys):
     
     """
     with capsys.disabled():
-        res, notes = chat(prompt, debug=False, force=True)
+        res, notes = chat(prompt, debug=False, force=False )
         print(res)
         assert isinstance(res.data, pd.DataFrame)
