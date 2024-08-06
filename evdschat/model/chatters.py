@@ -48,21 +48,21 @@ class ModelAbstract(ABC):
     debug = True
     test = False
 
-    def parse(self, prompt):
+    def parse(self, prompt) -> dict[str, str]:
         # assert len(str(self.api_key)) > 15
         return {"prompt": prompt, "model": self.model, "openai_api_key": self.api_key}
 
-    def defaultOptions(self):
+    def defaultOptions(self) -> str:
         return get_myapi_url()
 
-    def post(self, prompt: str) -> dict | bool:
+    def post(self, prompt: str) -> Union[dict, bool]:
 
         if self.debug:
             return str(self)
         response = self.request_fnc(self.defaultOptions(), json=self.parse(prompt))
         return self.post_helper(response)
 
-    def obscure(self, string: str):
+    def obscure(self, string: str) -> str:
         nstr = []
         for i, char in enumerate(string):
             if i % 3 == 1:
@@ -83,7 +83,7 @@ key : {api_key}
 api url : {get_myapi_url() }
 """
 
-    def mock_req(self, prompt):
+    def mock_req(self, prompt) -> dict[str, str]:
         return global_mock()
 
     def eval(self, kw: dict, permitted=None) -> Union[Tuple[Any, str], None]:
@@ -125,14 +125,14 @@ api url : {get_myapi_url() }
             return self.eval(res)
         return False
 
-    def json_loads(self, result):
+    def json_loads(self, result) -> dict[str, str]:
         try:
             res = json.loads(result)
         except Exception:
             self._raise()
         return res
 
-    def post_helper(self, response):
+    def post_helper(self, response) -> dict[str, str]:
 
         if response.status_code == 200:
             data = response.json()
@@ -153,7 +153,7 @@ api url : {get_myapi_url() }
 class OpenAI(ModelAbstract):
     """OpenAI"""
 
-    def post_c(self, p):
+    def post_c(self, p) -> dict[str, str]:
         resp = c_caller_main(p, get_openai_key(), self.defaultOptions())
         result_dict = json.loads(resp)
         r = result_dict["result"]
