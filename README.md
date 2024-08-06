@@ -1,3 +1,4 @@
+[![Python package](https://github.com/SermetPekin/evdschat/actions/workflows/python-package.yml/badge.svg?1)](https://github.com/SermetPekin/evdschat/actions/workflows/python-package.yml?1) [![PyPI](https://img.shields.io/pypi/v/evdschat)](https://img.shields.io/pypi/v/evdschat) [![Supported Python Versions](https://img.shields.io/pypi/pyversions/evdschat)](https://pypi.org/project/evdschat/) [![Downloads](https://static.pepy.tech/badge/evdschat)](https://pepy.tech/project/evdschat) [![Downloads](https://static.pepy.tech/badge/evdschat/month)](https://pepy.tech/project/evdschat) [![Downloads](https://pepy.tech/badge/evdschat/week)](https://pepy.tech/project/evdschat)
 
 # evdschat
 
