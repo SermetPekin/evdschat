@@ -57,6 +57,12 @@ result, notes = chat(prompt, test=False)
 print(result)
 ```
 
+
+## New in this version 
+- Replaced some modern features to support earlier Python versions.
+  Now supports Python versions 3.9 through 3.12.
+
+
 ## License
 
 This project is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License. See the [LICENSE](LICENSE) file for details.
