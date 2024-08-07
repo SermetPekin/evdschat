@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "evdschat"
-version = "0.1.2"
+version = "0.1.3"
 description = "evdschat"
 authors = ["sermet.pekin <Sermet.Pekin@gmail.com>"]
 license = "CC BY-NC 4.0" 
