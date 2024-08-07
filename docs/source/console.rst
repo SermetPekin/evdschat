@@ -1,6 +1,6 @@
 
 evdschat Function (From Console / Terminal ) 
-====================
+=============================================
 The ``chat`` function returns the most specific data that was figured out by the current LLM we use and our current vector DB.   
 
 
@@ -17,7 +17,8 @@ Behavior and Errors
 -------------------
 .env file will be checked for OPENAI_API_KEY and EVDS_API_KEY
 
-.. code-block:: python
+.. code-block:: bash
+    
     # .env file content (example)
     OPENAI_API_KEY = "sk-proj-ABCDEFGHIJKLMNOprqstuVYZ"
     EVDS_API_KEY=ABCDEFGH
@@ -47,7 +48,7 @@ To set environment variables on Windows, you can use the `setx` command in the C
 
 
 Linux and macOS
-----------
+--------------------
 To set environment variables on Linux or macOS, you can use the `export` command in the terminal:
 
 .. code-block:: bash
