@@ -87,7 +87,11 @@ def chat_console():
     result, notes = chat(prompt=args.prompt, debug=args.debug, test=args.test)
     print(result)
     print(notes)
-    result.to_excel(f"{args.file_name}.xlsx")
+    def correct(x:str):
+        if x.endswith('.xlsx') : return x 
+        return f'{x}.xlsx'
+    
+    result.to_excel(f"{correct(args.file_name)}")
 
 
 if __name__ == "__main__":

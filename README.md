@@ -56,6 +56,16 @@ prompt = '''
 result, notes = chat(prompt, test=False) 
 print(result)
 ```
+## Defining Api Keys ( .env file )
+
+```bash
+  # .env file content 
+
+  OPENAI_API_KEY = "sk-proj-ABCDEFGIJKLMNOPQRSTUXVZ"
+  EVDS_API_KEY=ABCDEFGIJKLMNOP
+
+```
+
 
 
 ## New in this version 
