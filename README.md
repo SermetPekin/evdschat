@@ -44,6 +44,16 @@ python3.11 -m pip install evdschat -U
 python3.10 -m pip install evdschat -U
 ```
 
+## Defining Api Keys ( .env file )
+
+```bash
+  # .env file content 
+
+  OPENAI_API_KEY = "sk-proj-ABCDEFGIJKLMNOPQRSTUXVZ"
+  EVDS_API_KEY=ABCDEFGIJKLMNOP
+
+```
+
 ## Example
 
 ```python
@@ -56,21 +66,11 @@ prompt = '''
 result, notes = chat(prompt, test=False) 
 print(result)
 ```
-## Defining Api Keys ( .env file )
-
-```bash
-  # .env file content 
-
-  OPENAI_API_KEY = "sk-proj-ABCDEFGIJKLMNOPQRSTUXVZ"
-  EVDS_API_KEY=ABCDEFGIJKLMNOP
-
-```
 
 
 
 ## New in this version 
-- Replaced some modern features to support earlier Python versions.
-  Now supports Python versions 3.9 through 3.12.
+
 
 
 ## License

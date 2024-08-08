@@ -24,6 +24,9 @@ Notes = TypeVar("Notes")
 class GotNoneFromGetter(BaseException): ...
 
 
+class GotUndefinedResult(BaseException): ...
+
+
 def chat(
     prompt: str,
     getter: ModelAbstract = OpenAI(),
@@ -65,6 +68,8 @@ def chat(
     Please try again later or check documentation for
     new API URLs"""
         )
+    if not isinstance(res , tuple ) or len(res ) != 2 :
+        raise GotUndefinedResult()
     result, notes = res
     return result, notes
 

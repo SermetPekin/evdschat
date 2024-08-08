@@ -64,7 +64,7 @@ class ModelAbstract(ABC):
 
     def obscure(self, string: str) -> str:
         nstr = []
-        for i, char in enumerate(string):
+        for i, char in enumerate(string.split()):
             if i % 3 == 1:
                 nstr.append(char)
             else:
