@@ -44,14 +44,13 @@ char* post_request(const char *url, const char *prompt, const char *api_key) {
     CURLcode res;
     struct response_data chunk;
 
-    chunk.memory = malloc(1);  // Initial memory allocation
-    chunk.size = 0;            // No data at this point
+    chunk.memory = malloc(1);  
+    chunk.size = 0;           
 
     curl_global_init(CURL_GLOBAL_DEFAULT);
     curl = curl_easy_init();
 
     if(curl) {
-        // Prepare the JSON payload
         char data[1024];
         snprintf(data, sizeof(data), "{\"prompt\": \"%s\", \"api_key\": \"%s\"}", prompt, api_key);
 
