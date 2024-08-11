@@ -23,7 +23,7 @@ setup(
     name='evdschat',
     version='0.0.4',
     author='Sermet Pekin <sermet.pekin@gmail.com>',
-    license='MIT',
+    license='CC BY-NC 4.0',
     packages=find_packages(),
     package_data={'evdschat': ['libpost_request.so']},
     cmdclass={'build_ext': BuildExt},
