@@ -53,7 +53,7 @@ def chat(
     if isinstance(res, type(None)):
         raise GotNoneFromGetter()
     if isinstance(res, str):
-        return res
+        return res,""
     if isinstance(res, bool):
         raise ValueError(
             """
