@@ -21,7 +21,7 @@ class BuildExt(build_ext):
 
 setup(
     name='evdschat',
-    version='0.0.4',
+    version='0.1.4',
     author='Sermet Pekin <sermet.pekin@gmail.com>',
     license='CC BY-NC 4.0',
     packages=find_packages(),
