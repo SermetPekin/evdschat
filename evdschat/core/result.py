@@ -4,12 +4,13 @@ import pandas as pd
 from evdspy.EVDSlocal.index_requests.get_series_indexes_exp import Result
 
 from enum import Enum
-from typing import  Any   
+from typing import Any
+
 
 class Status(Enum):
-    success= 1
-    failed= 0
-    unknown= 2
+    success = 1
+    failed = 0
+    unknown = 2
 
 
 @dataclass
@@ -19,7 +20,8 @@ class ResultChat(Result):
 
     def __str__(self):
         content = super().__str__()
-        return f"""
+        return (
+            f"""
     ! get_series_exp function returns instance of this class 
     <ResultChat>
     status   : {self.status.name}   => Indicates the status of the result
@@ -29,7 +31,9 @@ class ResultChat(Result):
     write    : Callable             => Creates an Excel file with data and metadata in two sheets 
     to_excel : Callable             => Same as write to meet pandas to_excel function 
     
-    """ + content
+    """
+            + content
+        )
 
 
 def create_result(result: Any, status: Status = None, reason: str = "") -> ResultChat:
@@ -37,16 +41,33 @@ def create_result(result: Any, status: Status = None, reason: str = "") -> Resul
         status = Status.unknown
 
     if isinstance(result, Result):
-        return ResultChat(data=result.data, metadata=result.metadata, write=result.write, status=status, reason=reason)
+        return ResultChat(
+            data=result.data,
+            metadata=result.metadata,
+            write=result.write,
+            status=status,
+            reason=reason,
+        )
 
     if isinstance(result, pd.DataFrame):
-        r = Result(data=result, metadata=pd.DataFrame(), write=None)  # Replace None with a suitable write function if available
-        return ResultChat(data=r.data, metadata=r.metadata, write=r.write, status=status, reason=reason)
+        r = Result(data=result, metadata=pd.DataFrame(), write=None)
+        return ResultChat(
+            data=r.data,
+            metadata=r.metadata,
+            write=r.write,
+            status=status,
+            reason=reason,
+        )
 
     if result is None:
-        r = Result(data=pd.DataFrame(), metadata=pd.DataFrame(), write=None)  # Replace None with a suitable write function if available
-        return ResultChat(data=r.data, metadata=r.metadata, write=r.write, status=status, reason=reason)
-
+        r = Result(data=pd.DataFrame(), metadata=pd.DataFrame(), write=None)
+        return ResultChat(
+            data=r.data,
+            metadata=r.metadata,
+            write=r.write,
+            status=status,
+            reason=reason,
+        )
 
 
 __all__ = ["ResultChat"]
