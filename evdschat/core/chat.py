@@ -16,7 +16,7 @@ import argparse
 from evdschat.model.chatters import ModelAbstract, OpenAI
 from ..common.github_actions import PytestTesting
 from typing import TypeVar, Tuple, Union
-from .result import ResultChat  , Status 
+from .result import ResultChat, Status
 
 # Result = TypeVar("Result")
 Notes = TypeVar("Notes")
@@ -51,6 +51,7 @@ def chat(
     getter.debug = debug
     getter.test = test
     res = getter(prompt)
+
     if isinstance(res, type(None)):
         raise GotNoneFromGetter()
     if isinstance(res, str):
@@ -72,10 +73,12 @@ def chat(
     if not isinstance(res, tuple) or len(res) != 2:
         raise GotUndefinedResult()
     result, notes = res
-    return result, notes
+    if isinstance(result, ResultChat):
+        return result, notes  
+    raise NotImplementedError("Unknown Result type ") 
 
 
-def chat_console():
+def chat_console() -> None:
     """
     Console function to handle user input and produce output.
 
