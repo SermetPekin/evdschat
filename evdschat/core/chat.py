@@ -16,8 +16,9 @@ import argparse
 from evdschat.model.chatters import ModelAbstract, OpenAI
 from ..common.github_actions import PytestTesting
 from typing import TypeVar, Tuple, Union
+from .result import ResultChat 
 
-Result = TypeVar("Result")
+# Result = TypeVar("Result")
 Notes = TypeVar("Notes")
 
 
@@ -33,7 +34,7 @@ def chat(
     debug=False,
     test=False,
     force=False,
-) -> Union[Tuple[Result, Notes], None]:
+) -> Union[Tuple[ResultChat, Notes], None]:
     """
     Function to process the chat prompt and return the result.
 
@@ -53,7 +54,7 @@ def chat(
     if isinstance(res, type(None)):
         raise GotNoneFromGetter()
     if isinstance(res, str):
-        return res,""
+        return res, ""
     if isinstance(res, bool):
         raise ValueError(
             """
@@ -68,7 +69,7 @@ def chat(
     Please try again later or check documentation for
     new API URLs"""
         )
-    if not isinstance(res , tuple ) or len(res ) != 2 :
+    if not isinstance(res, tuple) or len(res) != 2:
         raise GotUndefinedResult()
     result, notes = res
     return result, notes
@@ -92,10 +93,12 @@ def chat_console():
     result, notes = chat(prompt=args.prompt, debug=args.debug, test=args.test)
     print(result)
     print(notes)
-    def correct(x:str):
-        if x.endswith('.xlsx') : return x 
-        return f'{x}.xlsx'
-    
+
+    def correct(x: str):
+        if x.endswith(".xlsx"):
+            return x
+        return f"{x}.xlsx"
+
     result.to_excel(f"{correct(args.file_name)}")
 
 

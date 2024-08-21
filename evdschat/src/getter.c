@@ -47,6 +47,7 @@ static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *use
     return realsize;
 }
 
+
 const char *get_proxy_for_url(const char *url, const char *proxy_url)
 {
     if (proxy_url != NULL)
@@ -54,17 +55,25 @@ const char *get_proxy_for_url(const char *url, const char *proxy_url)
 
     const char *https_proxy = getenv("HTTPS_PROXY");
     const char *http_proxy = getenv("HTTP_PROXY");
+    
+    // Check for lowercase environment variables as well
+    if (https_proxy == NULL)
+        https_proxy = getenv("https_proxy");
+    if (http_proxy == NULL)
+        http_proxy = getenv("http_proxy");
 
-    if (strncmp(url, "https", 5) == 0 && https_proxy != NULL)
+    if (strncmp(url, "https", 5) == 0)
     {
         return https_proxy;
     }
-    else if (http_proxy != NULL)
+    else
     {
         return http_proxy;
     }
+
     return NULL;
 }
+
 
 char *post_request(const post_params *params)
 {

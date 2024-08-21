@@ -27,6 +27,13 @@ from evdschat.common.akeys import ApiKey
 import os
 from pathlib import Path
 
+import pandas as pd
+
+from evdschat.core.result import Result, ResultChat , create_result 
+from evdschat.core.result import Status
+
+
+
 
 def get_myapi_url():
     from dotenv import load_dotenv
@@ -101,11 +108,12 @@ api url : {get_myapi_url() }
             del kw["notes"]
         try:
             result = self.retrieve_fnc(kw["index"], **nkw)
-
-            return result, notes
+            res = create_result(result)
+            return res, notes
         except Exception:
             traceback.print_exc()
-        return None
+
+        return create_result(None, "Eval failed") , str("")
 
     def decide_caller(self):
         if self.test:
