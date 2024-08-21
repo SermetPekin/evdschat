@@ -29,10 +29,8 @@ from pathlib import Path
 
 import pandas as pd
 
-from evdschat.core.result import Result, ResultChat , create_result 
+from evdschat.core.result import Result, ResultChat, create_result
 from evdschat.core.result import Status
-
-
 
 
 def get_myapi_url():
@@ -108,12 +106,12 @@ api url : {get_myapi_url() }
             del kw["notes"]
         try:
             result = self.retrieve_fnc(kw["index"], **nkw)
-            res = create_result(result)
+            res = create_result(result, status=Status.success)
             return res, notes
         except Exception:
             traceback.print_exc()
 
-        return create_result(None, "Eval failed") , str("")
+        return create_result(None, status=Status.failed, reason="Eval failed"), str("")
 
     def decide_caller(self):
         if self.test:

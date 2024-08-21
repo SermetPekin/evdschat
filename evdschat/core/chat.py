@@ -16,7 +16,7 @@ import argparse
 from evdschat.model.chatters import ModelAbstract, OpenAI
 from ..common.github_actions import PytestTesting
 from typing import TypeVar, Tuple, Union
-from .result import ResultChat 
+from .result import ResultChat  , Status 
 
 # Result = TypeVar("Result")
 Notes = TypeVar("Notes")
