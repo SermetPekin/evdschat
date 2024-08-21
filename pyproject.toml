@@ -1,11 +1,13 @@
 [tool.poetry]
 name = "evdschat"
-version = "0.1.4"
-description = "evdschat"
+version = "0.1.6"
+description = "evdschat is an open-source Python package designed to enhance the evdspy package by allowing users to interact with the evdschat Application. This Node.js project aims to provide the most specific and accurate data users request during conversations, based on arguments such as start date, end date, and aggregation type, as described in the evdspy."
 authors = ["sermet.pekin <Sermet.Pekin@gmail.com>"]
 license = "CC BY-NC 4.0" 
 readme = "README.md"
 repository = "https://github.com/SermetPekin/evdschat"  # Add this line
+keywords = ["evdspy", "evdschat", "chatbot", "data-aggregation", "open-source", "Node.js", "Python", "API", "TCMB", "CBRT", "Generative AI"]
+
 
 [tool.poetry.dependencies]
 python = "^3.9"
