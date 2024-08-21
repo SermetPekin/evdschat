@@ -5,6 +5,9 @@ __pycache__/
 *.env 
 !example.env 
 
+test_pri_*.* 
+
+
 poetry.lock
 *.xlsx
 *.docx 

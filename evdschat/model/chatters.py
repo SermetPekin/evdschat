@@ -54,7 +54,7 @@ class ModelAbstract(ABC):
     test = False
 
     def parse(self, prompt) -> dict[str, str]:
-        # assert len(str(self.api_key)) > 15
+
         return {"prompt": prompt, "model": self.model, "openai_api_key": self.api_key}
 
     def defaultOptions(self) -> str:
@@ -91,37 +91,54 @@ api url : {get_myapi_url() }
     def mock_req(self, prompt) -> dict[str, str]:
         return global_mock()
 
-    def eval(self, kw: dict, permitted=None) -> Union[Tuple[Any, str], None]:
-        # print(kw.keys())
-        nkw = {}
+    def check_permitted(self, key: str, permitted=None) -> bool:
         if not permitted:
             permitted = ["start_date", "aggregate", "frequency" "cache"]
-        for k, v in kw.items():
-            if k in permitted:
-                nkw[k] = v
+        return key in permitted
 
-        notes = ""
-        if "notes" in kw:
-            notes = kw["notes"]
-            del kw["notes"]
+    def permitted_dict(self, kw: dict, permitted: None) -> Tuple[dict, str]:
+        new_dict = {}
+
+        for k, v in kw.items():
+            if self.check_permitted(k, permitted):
+                new_dict[k] = v
+
+        return new_dict
+
+    def eval_real(self, kw, permitted=None) -> tuple[ResultChat, str]:
+        """eval_real"""
+        notes = kw.get("notes", "")
         try:
-            result = self.retrieve_fnc(kw["index"], **nkw)
-            res = create_result(result, status=Status.success)
-            return res, notes
+            result = self.retrieve_fnc(
+                kw["index"], **self.permitted_dict(kw, permitted)
+            )
+            return create_result(result, status=Status.success), notes
         except Exception:
             traceback.print_exc()
 
-        return create_result(None, status=Status.failed, reason="Eval failed"), str("")
+        return self.failed_result()
+
+    def failed_result(self):
+        """failed_result"""
+        return create_result(None, status=Status.failed, reason="Eval failed")
+
+    def eval(self, kw: dict, permitted=None) -> Tuple[Any, str]:
+        """eval"""
+        index = kw.get("index", None)
+
+        if not index:
+            return self.failed_result(), str("")
+        return  self.eval_real(kw, permitted)
 
     def decide_caller(self):
+        """decide_caller"""
         if self.test:
             return self.mock_req
         if callable(c_caller_main):
             return self.post_c
         return self.post
 
-    def __call__(self, prompt, **kwargs) -> Union[Tuple[Any, str], None]:
-        import platform
+    def __call__(self, prompt, **kwargs) -> Union[Tuple[Any, str], bool]:
 
         if self.debug:
             return str(self)
@@ -159,10 +176,15 @@ api url : {get_myapi_url() }
 class OpenAI(ModelAbstract):
     """OpenAI"""
 
-    def post_c(self, p) -> dict[str, str]:
-        resp = c_caller_main(p, get_openai_key(), self.defaultOptions())
+    def post_c(self, prompt: str , caller = c_caller_main ) -> dict[str, str]:
+        resp = caller(prompt, get_openai_key(), self.defaultOptions())
         result_dict = json.loads(resp)
         r = result_dict["result"]
         res = json.loads(r)
         res["cache"] = False
         return res
+
+
+@dataclass
+class TestAI(OpenAI):
+    """TestAI"""
