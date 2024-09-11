@@ -36,9 +36,9 @@ jobs:
         python -m pip install evdschat       
         uv venv
         source .venv/bin/activate
-#        uv pip install .
+        # uv pip install .
         pip install evdschat
-
+      
     - name: Lint with flake8
       run: |
 #        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
