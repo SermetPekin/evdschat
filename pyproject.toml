@@ -1,6 +1,6 @@
 [project]
 name = "evdschat"
-version = "0.1.7"
+version = "0.1.8"
 description = "evdschat is an open-source Python package designed to enhance the evdspy package by allowing users to interact with the evdschat Application. This Node.js project aims to provide the most specific and accurate data users request during conversations, based on arguments such as start date, end date, and aggregation type, as described in the evdspy."
 authors = [
     { name = "Sermet Pekin", email = "Sermet.Pekin@gmail.com" }
