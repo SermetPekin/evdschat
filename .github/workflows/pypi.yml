@@ -1,4 +1,5 @@
-name: Python Package Workflow
+
+name: Python Package Workflow PYPI
 
 on:
   push:
@@ -32,14 +33,9 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install flake8 pytest uv pydantic
         
-        # Install the latest version of evdschat from the repository
-        python -m pip install git+https://github.com/SermetPekin/evdschat.git
-        
-        # Create and activate a virtual environment using uv
+        python -m pip install evdschat       
         uv venv
         source .venv/bin/activate
-
-        # Install the current package in the virtual environment
         uv pip install .
 
     - name: Lint with flake8
