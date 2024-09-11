@@ -13,14 +13,11 @@
 # limitations under the License.
 
 
-from dataclasses import dataclass, field
+from pydantic import BaseModel, Field
 from abc import ABC
 import os
 from pathlib import Path
 from typing import Union
-
-
-
 
 
 class ErrorApiKey(Exception):
@@ -34,18 +31,16 @@ class ErrorApiKey(Exception):
         self.message = message
         super().__init__(self.message)
 
-class ApiKey(ABC):
-    def __init__(self , key : str ) -> None:
-        self.key = key 
-        self.check()
 
-    def __postinit__(self):
+class ApiKey(ABC):
+    def __init__(self, key: str) -> None:
+        self.key = key
         self.check()
 
     def check(self):
-        if isinstance(self.key , type(None)) : 
+        if isinstance(self.key, type(None)):
             raise ErrorApiKey('Api key not set. Please see the documentation.')
-        if not isinstance(self.key , str ) or  len(str(self.key))< 5:
+        if not isinstance(self.key, str) or len(str(self.key)) < 5:
             raise ErrorApiKey(f"Api key {self.key} is not a valid key")
         return True
 
@@ -56,14 +51,13 @@ class ApiKey(ABC):
         self.key = key
 
 
-
 class OpenaiApiKey(ApiKey):
-    def __init__(self , key : str ) -> None:
-        self.key = key 
+    def __init__(self, key: str) -> None:
+        super().__init__(key)
+        self.key = key
         self.check()
 
-    def check(self)-> Union[bool , None ] :
-        #super().__init__(self)
+    def check(self) -> Union[bool, None]:
 
         if not str(self.key).startswith("sk-") and len(str(self.key)) < 6:
             raise ErrorApiKey(f"{self.key} is not a valid key")
@@ -81,8 +75,8 @@ def load_api_keys() -> Union[dict[str, str], None]:
 
     env_file = Path(".env")
     load_dotenv(env_file)
-    openai_api_key = OpenaiApiKey( os.getenv("OPENAI_API_KEY"  ))
-    evds_api_key = EvdsApiKey(  os.getenv("EVDS_API_KEY"  )   )
+    openai_api_key = OpenaiApiKey(os.getenv("OPENAI_API_KEY"))
+    evds_api_key = EvdsApiKey(os.getenv("EVDS_API_KEY"))
     return {
         "OPENAI_API_KEY": openai_api_key,
         "EVDS_API_KEY": evds_api_key,
@@ -91,9 +85,17 @@ def load_api_keys() -> Union[dict[str, str], None]:
 
 def get_openai_key():
     d = load_api_keys()
-    return d["OPENAI_API_KEY"].key 
+    return d["OPENAI_API_KEY"].key
 
 
-@dataclass
-class ApiKeyManager:
-    api_key: ApiKey = field(default_factory=ApiKey)
+# @dataclass
+
+class ApiKeyManager(BaseModel):
+    api_key: ApiKey = Field(default_factory=lambda: ApiKey())
+
+    class Config:
+        arbitrary_types_allowed = True
+
+        # def __get_pydantic_core_schema__(cls, handler):
+    #     # Generate a schema if necessary, or skip it
+    #     return handler.generate_schema(cls)

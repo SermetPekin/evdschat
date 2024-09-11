@@ -14,14 +14,15 @@
 
 from dataclasses import dataclass, field
 
+from pydantic import BaseModel, Field
+
 from ..model.chatters import ModelAbstract, OpenAI
 from ..common.akeys import ApiKey, OpenaiApiKey, get_openai_key
 
 
-@dataclass
-class Builder:
-    retriever: ModelAbstract = field(default_factory=ModelAbstract)
-    api_key: ApiKey = field(default_factory=ApiKey)
+class Builder(BaseModel):
+    retriever: ModelAbstract = Field(default_factory=lambda: ModelAbstract())
+    api_key: ApiKey = Field(default_factory=lambda: ApiKey())
 
 
 def build_openai():
