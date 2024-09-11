@@ -1,30 +1,29 @@
-[project]
+[tool.poetry]
 name = "evdschat"
-version = "0.1.7"
+version = "0.1.6"
 description = "evdschat is an open-source Python package designed to enhance the evdspy package by allowing users to interact with the evdschat Application. This Node.js project aims to provide the most specific and accurate data users request during conversations, based on arguments such as start date, end date, and aggregation type, as described in the evdspy."
-authors = [
-    { name = "Sermet Pekin", email = "Sermet.Pekin@gmail.com" }
-]
-license = { file = "LICENSE" }
+authors = ["sermet.pekin <Sermet.Pekin@gmail.com>"]
+license = "CC BY-NC 4.0" 
 readme = "README.md"
+repository = "https://github.com/SermetPekin/evdschat"  # Add this line
 keywords = ["evdspy", "evdschat", "chatbot", "data-aggregation", "open-source", "Node.js", "Python", "API", "TCMB", "CBRT", "Generative AI"]
 
 
-requires-python = ">=3.10"
-dependencies = [
-    "evdspy>=1.1.40",
-    "rich>=13.8.1",
-]
-[project.urls]
-repository = "https://github.com/SermetPekin/evdschat"
+[tool.poetry.dependencies]
+python = "^3.9"
+evdspy = ">=1.1.40"
+rich = ">=13.7.1"
+requests = ">=2.32.3"
+python-dotenv = ">=1.0.1"
 
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.2"
+ruff = "^0.5.6"
+tox = "^4.16.0"
 
-[scripts]
+[tool.poetry.scripts]
 evdschat = "evdschat:chat_console"
 
-[tool.uv]
-dev-dependencies = [
-    "pytest>=8.3.3",
-    "ruff>=0.6.4",
-    "tox>=4.18.1",
-]
+[build-system]
+requires = ["poetry-core>=1.0.0", "setuptools>=42.0.0"]
+build-backend = "setuptools.build_meta"

@@ -1,19 +1,17 @@
 import json
 import pytest
 import ctypes
-import os
-import platform
 from pathlib import Path
-from importlib import resources
-from typing import Union
 import platform
 
-from evdschat.model.chatters import get_myapi_url, get_openai_key
-from evdschat.model.chatters import TestAI, get_myapi_url
+from evdschat.model.chatters import (
+    get_openai_key,
+    TestAI,
+    get_myapi_url
+)
 
 
 def get_exec_file(test=False) -> Path:
-
     executable_name = "libpost_request.so"
     if platform.system() == "Windows":
         executable_name = "libpost_request.dll"
@@ -45,7 +43,6 @@ def test_post_c():
 
 
 def get_c_fnc():
-
     class PostParams(ctypes.Structure):
         _fields_ = [
             ("url", ctypes.c_char_p),
@@ -54,7 +51,7 @@ def get_c_fnc():
             ("proxy_url", ctypes.c_char_p),
         ]
 
-    lib_path = get_exec_file()  #  check_c_executable()
+    lib_path = get_exec_file()  # check_c_executable()
     if lib_path.exists():
         lib = ctypes.CDLL(lib_path)
 
@@ -82,6 +79,5 @@ def get_c_fnc():
             return c_caller(params)
 
     return c_caller_main
-
 
 # test_post_c()

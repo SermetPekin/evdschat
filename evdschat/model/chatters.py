@@ -17,19 +17,17 @@ import traceback
 from typing import Callable, Any, Tuple, Union
 from abc import ABC
 import requests
-from evdspy import get_series_exp, get_series
+from evdspy import get_series_exp
 from evdschat.common.akeys import get_openai_key
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from evdschat.common.globals import global_mock
 from ..common.bridge import c_caller_main
-from evdschat.common.akeys import ApiKey
 
 import os
 from pathlib import Path
 
-import pandas as pd
 
-from evdschat.core.result import Result, ResultChat, create_result
+from evdschat.core.result import ResultChat, create_result
 from evdschat.core.result import Status
 
 

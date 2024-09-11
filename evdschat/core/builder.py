@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import traceback
 from dataclasses import dataclass, field
 
 from ..model.chatters import ModelAbstract, OpenAI
@@ -21,11 +20,10 @@ from ..common.akeys import ApiKey, OpenaiApiKey, get_openai_key
 
 @dataclass
 class Builder:
-    retriever = field(default_factory=ModelAbstract)
-    api_key = field(default_factory=ApiKey)
+    retriever: ModelAbstract = field(default_factory=ModelAbstract)
+    api_key: ApiKey = field(default_factory=ApiKey)
 
 
 def build_openai():
-
     builder = Builder(OpenAI(), OpenaiApiKey(get_openai_key()))
     return builder

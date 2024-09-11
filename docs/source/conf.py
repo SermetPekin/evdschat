@@ -2,6 +2,7 @@
 #
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
+import traceback
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
@@ -53,8 +54,8 @@ html_static_path = ["_static"]  # Static files path
 # html_extra_path= ["extras"]
 try:
     os.makedirs(html_static_path[0])
-except:
-    pass
+except Exception:
+    traceback.print_exc()
 
 source_suffix = {
     ".rst": "restructuredtext",
@@ -63,7 +64,6 @@ source_suffix = {
 }
 
 
-from sphinx.util import logging
 
 logger = logging.getLogger(__name__)
 
