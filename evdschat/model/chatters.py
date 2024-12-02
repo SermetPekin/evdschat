@@ -172,18 +172,7 @@ api url : {get_myapi_url()}
         else:
             self._raise(response)
 
-    # def post_helper(self, response) -> dict[str, str]:
-    #
-    #     if response.status_code == 200:
-    #         data = response.json()
-    #         result_code = data.get("result")
-    #
-    #         if result_code:
-    #             result_code = result_code.replace("'", '"').replace("=", ":")
-    #             result_dict = self.json_loads(result_code)
-    #             result_dict["cache"] = False
-    #             return result_dict
-    #     self._raise(response)
+
 
     def _raise(self, response=None, *args):
         error_message = "Could not read return content from Node"
