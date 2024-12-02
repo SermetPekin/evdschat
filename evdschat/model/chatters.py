@@ -14,18 +14,17 @@
 
 import json
 import traceback
-from typing import Callable, Any, Tuple, Union
-from abc import ABC
+from typing import Callable, Any, Tuple, Union, Dict
+from abc import ABC, abstractmethod
 import requests
 from evdspy import get_series_exp
-from evdschat.common.akeys import get_openai_key
+from evdschat.common.akeys import get_openai_key, get_openai_key_string, ApiKey
 from dataclasses import dataclass
-from evdschat.common.globals import global_mock
-from ..common.bridge import c_caller_main
+from evdschat.common.globals import global_mock, DEFAULT_CHAT_API_URL
+from evdschat.common.bridge import c_caller_main
 
 import os
 from pathlib import Path
-
 
 from evdschat.core.result import ResultChat, create_result
 from evdschat.core.result import Status
@@ -37,7 +36,7 @@ def get_myapi_url():
     load_dotenv(Path(".") / ".env")
 
     CHAT_API_URL = os.getenv(
-        "CHAT_API_URL", "https://evdspychat-dev2-1.onrender.com/api/ask"
+        "CHAT_API_URL", DEFAULT_CHAT_API_URL
     )
     return CHAT_API_URL
 
@@ -47,43 +46,49 @@ class ModelAbstract(ABC):
     retrieve_fnc: Callable = get_series_exp
     request_fnc: Callable = requests.post
     model: str = "gpt-4"
-    api_key: str = get_openai_key()
+    api_key: ApiKey | None = None  # get_openai_key()
     debug = True
     test = False
 
+    def __post_init__(self):
+        ...
+
+    @abstractmethod
+    def load_api_keys(self):
+        ...
+
+    def get_api_key_str(self):
+        return str(self.api_key)
+
     def parse(self, prompt) -> dict[str, str]:
+        return {"prompt": prompt, "model": self.model, self.api_key.key_name: str(self.api_key)}
 
-        return {"prompt": prompt, "model": self.model, "openai_api_key": self.api_key}
-
-    def defaultOptions(self) -> str:
+    @staticmethod
+    def defaultOptions() -> str:
         return get_myapi_url()
 
     def post(self, prompt: str) -> Union[dict, bool]:
 
         if self.debug:
             return str(self)
+        self.load_api_keys()
         response = self.request_fnc(self.defaultOptions(), json=self.parse(prompt))
         return self.post_helper(response)
 
     def obscure(self, string: str) -> str:
-        nstr = []
-        for i, char in enumerate(string.split()):
-            if i % 3 == 1:
-                nstr.append(char)
-            else:
-                nstr.append("*")
-
-        return "".join(nstr)
+        return ''.join(
+            char if i % 3 == 1 else '*' for i, char in enumerate(string)
+        )
 
     def __str__(self):
-        api_key = self.obscure(self.api_key)
+        api_key = self.obscure(str(self.api_key))
 
         return f"""
 
 prompt : {self.parse('<prompt|>')}
 fnc : {self.request_fnc}
 key : {api_key}
-api url : {get_myapi_url() }
+api url : {get_myapi_url()}
 """
 
     def mock_req(self, prompt) -> dict[str, str]:
@@ -94,13 +99,12 @@ api url : {get_myapi_url() }
             permitted = ["start_date", "aggregate", "frequency" "cache"]
         return key in permitted
 
-    def permitted_dict(self, kw: dict, permitted: None) -> Tuple[dict, str]:
+    def permitted_dict(self, kw: dict, permitted: None) -> Dict[str, str | int]:
         new_dict = {}
 
         for k, v in kw.items():
             if self.check_permitted(k, permitted):
                 new_dict[k] = v
-
         return new_dict
 
     def eval_real(self, kw, permitted=None) -> tuple[ResultChat, str]:
@@ -126,7 +130,7 @@ api url : {get_myapi_url() }
 
         if not index:
             return self.failed_result(), str("")
-        return  self.eval_real(kw, permitted)
+        return self.eval_real(kw, permitted)
 
     def decide_caller(self):
         """decide_caller"""
@@ -154,28 +158,43 @@ api url : {get_myapi_url() }
         return res
 
     def post_helper(self, response) -> dict[str, str]:
-
         if response.status_code == 200:
-            data = response.json()
-            result_code = data.get("result")
+            try:
+                data = response.json()
+                result_code = data.get("result")
+                if result_code:
+                    result_code = result_code.replace("'", '"').replace("=", ":")
+                    result_dict = self.json_loads(result_code)
+                    result_dict["cache"] = False
+                    return result_dict
+            except (KeyError, json.JSONDecodeError) as e:
+                raise ValueError(f"Error parsing response: {e}, Content: {response.text}")
+        else:
+            self._raise(response)
 
-            if result_code:
-                result_code = result_code.replace("'", '"').replace("=", ":")
-                result_dict = self.json_loads(result_code)
-                result_dict["cache"] = False
-                return result_dict
-        self._raise()
 
-    def _raise(self, *args):
-        raise ValueError("Could not read return content form Node")
+
+    def _raise(self, response=None, *args):
+        error_message = "Could not read return content from Node"
+        if response:
+            error_message += f". Response code: {response.status_code}, Content: {response.text}"
+        raise ValueError(error_message)
 
 
 @dataclass
 class OpenAI(ModelAbstract):
     """OpenAI"""
 
-    def post_c(self, prompt: str , caller = c_caller_main ) -> dict[str, str]:
-        resp = caller(prompt, get_openai_key(), self.defaultOptions())
+    def check_initial(self) -> bool:
+        k = get_openai_key_string()
+        return isinstance(k, str)
+
+    def load_api_keys(self):
+        self.api_key: ApiKey = get_openai_key()
+        self.api_key.check()  # may raise
+
+    def post_c(self, prompt: str, caller=c_caller_main) -> dict[str, str]:
+        resp = caller(prompt, str(self.api_key), self.defaultOptions())
         result_dict = json.loads(resp)
         r = result_dict["result"]
         res = json.loads(r)

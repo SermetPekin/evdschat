@@ -1,6 +1,6 @@
 [project]
 name = "evdschat"
-version = "0.1.9"
+version = "0.1.10"
 description = "evdschat is an open-source Python package designed to enhance the evdspy package by allowing users to interact with the evdschat Application. This Node.js project aims to provide the most specific and accurate data users request during conversations, based on arguments such as start date, end date, and aggregation type, as described in the evdspy."
 authors = [
     { name = "Sermet Pekin", email = "Sermet.Pekin@gmail.com" }
@@ -28,6 +28,7 @@ dev-dependencies = [
     "tox>=4.18.1",
 ]
 
+
 [build-system]
-requires = ["setuptools", "wheel", "uv"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"

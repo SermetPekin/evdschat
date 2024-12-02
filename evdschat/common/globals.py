@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+WARNING_SLEEP_SECONDS = 6
+DEFAULT_CHAT_API_URL = "https://evdspychat-dev2-1.onrender.com/api/ask"
+
 
 def global_mock():
     template = """ 

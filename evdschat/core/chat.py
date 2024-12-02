@@ -29,11 +29,11 @@ class GotUndefinedResult(BaseException): ...
 
 
 def chat(
-    prompt: str,
-    getter: ModelAbstract = OpenAI(),
-    debug=False,
-    test=False,
-    force=False,
+        prompt: str,
+        getter: ModelAbstract = None,
+        debug=False,
+        test=False,
+        force=False,
 ) -> Union[Tuple[ResultChat, Notes], None]:
     """
     Function to process the chat prompt and return the result.
@@ -44,6 +44,11 @@ def chat(
     :param test: bool - Flag indicating whether to run in test mode.
     :return: DataFrame or Result Instance with .data (DataFrame), .metadata (DataFrame), and .to_excel (Callable).
     """
+
+    if getter is None:
+        getter = OpenAI()
+
+
 
     if not force and PytestTesting().is_testing():
         test = True
@@ -74,8 +79,8 @@ def chat(
         raise GotUndefinedResult()
     result, notes = res
     if isinstance(result, ResultChat):
-        return result, notes  
-    raise NotImplementedError("Unknown Result type ") 
+        return result, notes
+    raise NotImplementedError("Unknown Result type ")
 
 
 def chat_console() -> None:
