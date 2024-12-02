@@ -17,7 +17,10 @@ from pydantic import BaseModel, Field
 from abc import ABC
 import os
 from pathlib import Path
-from typing import Union
+from typing import Union, Dict
+import time
+
+from evdschat.common.globals import WARNING_SLEEP_SECONDS
 
 
 class ErrorApiKey(Exception):
@@ -33,13 +36,21 @@ class ErrorApiKey(Exception):
 
 
 class ApiKey(ABC):
-    def __init__(self, key: str) -> None:
+    def __init__(self, key: str, key_name: str = 'ApiKey') -> None:
         self.key = key
+        self.key_name = key_name
         self.check()
+
+    def __str__(self):
+        return self.key
+
+    def msg_before_raise(self):
+        showApiKeyMessage(self.__class__.__name__)
+        # create_env_example_file()
 
     def check(self):
         if isinstance(self.key, type(None)):
-            raise ErrorApiKey('Api key not set. Please see the documentation.')
+            raise ErrorApiKey("Api key not set. Please see the documentation.")
         if not isinstance(self.key, str) or len(str(self.key)) < 5:
             raise ErrorApiKey(f"Api key {self.key} is not a valid key")
         return True
@@ -51,16 +62,52 @@ class ApiKey(ABC):
         self.key = key
 
 
+def sleep(number: int):
+    time.sleep(number)
+
+
+def showApiKeyMessage(cls_name: str) -> None:
+    msg = f"""
+   {cls_name} not found. 
+   
+   create `.env` file and put necessary API keys for EVDS and {cls_name}
+   see documentation for details.
+   
+   """
+
+    print(msg)
+    sleep(WARNING_SLEEP_SECONDS)
+
+
+def write_env_example(file_name: Path):
+    content = (
+        "\nOPENAI_API_KEY=sk-proj-ABCDEFGIJKLMNOPQRSTUXVZ\nEVDS_API_KEY=ABCDEFGIJKLMNOP"
+    )
+    with open(file_name, "w") as f:
+        f.write(content)
+        print("Example .env file was created.")
+        sleep(WARNING_SLEEP_SECONDS)
+
+
+def create_env_example_file():
+    file_name = Path(".env")
+    if not file_name.exists():
+        write_env_example(file_name)
+
+
 class OpenaiApiKey(ApiKey):
     def __init__(self, key: str) -> None:
         super().__init__(key)
         self.key = key
-        self.check()
+        self.key_name = 'openai_api_key'
+        # self.check()
 
-    def check(self) -> Union[bool, None]:
-
+    def check(self, raise_=True) -> Union[bool, None]:
         if not str(self.key).startswith("sk-") and len(str(self.key)) < 6:
-            raise ErrorApiKey(f"{self.key} is not a valid key")
+            self.msg_before_raise()
+            if raise_:
+                raise ErrorApiKey(f"{self.key} is not a valid key")
+            return False
         return True
 
 
@@ -70,7 +117,7 @@ class EvdsApiKey(ApiKey): ...
 class MistralApiKey(ApiKey): ...
 
 
-def load_api_keys() -> Union[dict[str, str], None]:
+def load_api_keys() -> Dict[str, OpenaiApiKey | EvdsApiKey]:
     from dotenv import load_dotenv
 
     env_file = Path(".env")
@@ -83,19 +130,31 @@ def load_api_keys() -> Union[dict[str, str], None]:
     }
 
 
-def get_openai_key():
+def load_api_keys_string() -> Dict[str, str]:
+    from dotenv import load_dotenv
+
+    env_file = Path(".env")
+    load_dotenv(env_file)
+    openai_api_key = os.getenv("OPENAI_API_KEY")
+    evds_api_key = os.getenv("EVDS_API_KEY")
+    return {
+        "OPENAI_API_KEY": openai_api_key,
+        "EVDS_API_KEY": evds_api_key,
+    }
+
+
+def get_openai_key() -> OpenaiApiKey:
     d = load_api_keys()
-    return d["OPENAI_API_KEY"].key
+    return d["OPENAI_API_KEY"]
 
 
-# @dataclass
+def get_openai_key_string() -> str | None:
+    d = load_api_keys_string()
+    return d["OPENAI_API_KEY"]
+
 
 class ApiKeyManager(BaseModel):
     api_key: ApiKey = Field(default_factory=lambda: ApiKey())
 
     class Config:
         arbitrary_types_allowed = True
-
-        # def __get_pydantic_core_schema__(cls, handler):
-    #     # Generate a schema if necessary, or skip it
-    #     return handler.generate_schema(cls)

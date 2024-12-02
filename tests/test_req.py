@@ -4,14 +4,10 @@ import ctypes
 from pathlib import Path
 import platform
 
-from evdschat.model.chatters import (
-    get_openai_key,
-    TestAI,
-    get_myapi_url
-)
+from evdschat.model.chatters import get_openai_key, TestAI, get_myapi_url
 
 
-def get_exec_file(test=False) -> Path:
+def get_exec_file() -> Path:
     executable_name = "libpost_request.so"
     if platform.system() == "Windows":
         executable_name = "libpost_request.dll"

@@ -18,7 +18,7 @@ import pandas as pd
 
 
 def test_chat(capsys):
-    with capsys.disabled() : 
+    with capsys.disabled():
         prompt = """
 
         Can I get reserves data please ? Aylık frekans istiyorum. ortalama olarak toplulaştırır mısın? 
@@ -26,6 +26,6 @@ def test_chat(capsys):
         
         """
         with capsys.disabled():
-            res, notes = chat(prompt, debug=False, force=False )
+            res, notes = chat(prompt, debug=False, force=False)
             print(res)
             assert isinstance(res.data, pd.DataFrame)

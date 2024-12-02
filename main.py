@@ -17,7 +17,7 @@ from evdschat import chat
 
 prompt = """
 
- Can I get reserves data please ? frequence must be monthly and you may aggregate by averages. 
+ Can I get reserves data please ? Frequency must be monthly and you may aggregate by averages. 
  
  
 """
