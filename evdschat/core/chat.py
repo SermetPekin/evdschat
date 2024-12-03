@@ -31,10 +31,10 @@ class GotUndefinedResult(BaseException): ...
 def chat(
         prompt: str,
         getter: ModelAbstract = None,
-        debug=False,
-        test=False,
-        force=False,
-) -> Union[Tuple[ResultChat, Notes], None]:
+        debug: bool = False,
+        test: bool = False,
+        force: bool = False,
+) -> Union[Tuple[ResultChat | str, Notes], None]:
     """
     Function to process the chat prompt and return the result.
 
@@ -48,8 +48,6 @@ def chat(
 
     if getter is None:
         getter = OpenAI()
-
-
 
     if not force and PytestTesting().is_testing():
         test = True

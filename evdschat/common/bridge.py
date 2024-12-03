@@ -43,7 +43,7 @@ def check_c_executable(test=False) -> Union[Path, bool]:
 
 lib_path = check_c_executable()
 if lib_path:
-    lib = ctypes.CDLL(lib_path)
+    lib = ctypes.CDLL(str(lib_path))
 
     lib.post_request.argtypes = [ctypes.POINTER(PostParams)]
     lib.post_request.restype = ctypes.c_char_p
