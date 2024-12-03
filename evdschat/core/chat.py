@@ -42,6 +42,7 @@ def chat(
     :param getter: ModelAbstract - The model to use for processing the chat.
     :param debug: bool - Flag for enabling debug mode.
     :param test: bool - Flag indicating whether to run in test mode.
+    :param force: bool - Flag to bypass pytest
     :return: DataFrame or Result Instance with .data (DataFrame), .metadata (DataFrame), and .to_excel (Callable).
     """
 
